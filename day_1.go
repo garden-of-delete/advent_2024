@@ -17,6 +17,15 @@ func abs(x int) int {
 	return x // control via return statement is a bad pattern. is there a better way to do this in go?
 }
 
+func countOccurrences(arr []int) map[int]int {
+
+	countMap := make(map[int]int)
+	for _, num := range arr {
+		countMap[num]++
+	}
+	return countMap
+}
+
 func dayOne() {
 
 	file, err := os.Open("input-data/day1_input.txt")
@@ -64,4 +73,19 @@ func dayOne() {
 	}
 	fmt.Println("INFO: the differences sum to ", sum)
 
+	var similarity []int
+	countMap := countOccurrences(vals2)
+	for i := range vals1 {
+		if v, ok := countMap[vals1[i]]; ok {
+			similarity = append(similarity, vals1[i]*v)
+		} else {
+			continue
+		}
+	}
+
+	sum = 0
+	for _, x := range similarity {
+		sum += x
+	}
+	fmt.Println("INFO: similarity score ", sum)
 }
