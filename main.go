@@ -1,8 +1,12 @@
 package main
 
+import "fmt"
+
 func main() {
 
-	print("day 1...\n")
+	fmt.Println("day 1...")
 	dayOne()
+	fmt.Println("day 2...")
+	dayTwo()
 
 }
