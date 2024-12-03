@@ -27,7 +27,7 @@ func countOccurrences(arr []int) map[int]int {
 func fileLineScanner(filename string) ([]string, error) {
 
 	var values []string
-	file, err := os.Open("input-data/day1_input.txt")
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 		return values, err

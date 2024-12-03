@@ -18,13 +18,13 @@ func dayOne() {
 	for _, line := range lines {
 		parts := strings.Fields(line)
 		if len(parts) != 2 {
-			fmt.Println("WARN: invalid line: ", line)
+			fmt.Println("WARN: invalid line:", line)
 			continue
 		}
 		num1, err1 := strconv.Atoi(parts[0])
 		num2, err2 := strconv.Atoi(parts[1])
 		if err1 != nil || err2 != nil {
-			fmt.Println("WARN: invalid data in line: ", line)
+			fmt.Println("WARN: invalid data in line:", line)
 			continue
 		}
 		vals1 = append(vals1, num1)
@@ -41,7 +41,7 @@ func dayOne() {
 		//fmt.Println(dif)
 	}
 
-	fmt.Println("INFO: the differences sum to ", sumIntArray(difs))
+	fmt.Println("INFO: the differences sum to", sumIntArray(difs))
 
 	var similarity []int
 	countMap := countOccurrences(vals2)
@@ -52,5 +52,5 @@ func dayOne() {
 			continue
 		}
 	}
-	fmt.Println("INFO: similarity score ", sumIntArray(similarity))
+	fmt.Println("INFO: similarity score", sumIntArray(similarity))
 }
