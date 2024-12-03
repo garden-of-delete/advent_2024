@@ -26,6 +26,15 @@ func countOccurrences(arr []int) map[int]int {
 	return countMap
 }
 
+func sumIntArray(arr []int) int {
+
+	sum := 0
+	for _, x := range arr {
+		sum += x
+	}
+	return sum
+}
+
 func dayOne() {
 
 	file, err := os.Open("input-data/day1_input.txt")
@@ -67,11 +76,7 @@ func dayOne() {
 		//fmt.Println(dif)
 	}
 
-	sum := 0
-	for _, x := range difs {
-		sum += abs(x)
-	}
-	fmt.Println("INFO: the differences sum to ", sum)
+	fmt.Println("INFO: the differences sum to ", sumIntArray(difs))
 
 	var similarity []int
 	countMap := countOccurrences(vals2)
@@ -82,10 +87,5 @@ func dayOne() {
 			continue
 		}
 	}
-
-	sum = 0
-	for _, x := range similarity {
-		sum += x
-	}
-	fmt.Println("INFO: similarity score ", sum)
+	fmt.Println("INFO: similarity score ", sumIntArray(similarity))
 }
