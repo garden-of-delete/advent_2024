@@ -2,9 +2,15 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
+
+type Report struct {
+	originalIsValid bool // default value is false
+	excisedIsValid  bool
+}
 
 func checkReportIsValid(slice []int) bool {
 
@@ -43,12 +49,8 @@ func reverseCopy(arr []int) []int {
 	return reversed
 }
 
-type Report struct {
-	originalIsValid bool // default value is false
-	excisedIsValid  bool
-}
-
 func exciseScan(slice []int) Report { // it's pasta time
+
 	reversed := reverseCopy(slice)
 	//fmt.Println("for slice", slice)
 	// check if report is valid in either direction
@@ -75,7 +77,7 @@ func dayTwo() {
 
 	lines, err := fileLineScanner("input-data/day2_input.txt")
 	if err != nil {
-		return
+		log.Fatal("Unable to read input file")
 	}
 
 	var vals [][]int
