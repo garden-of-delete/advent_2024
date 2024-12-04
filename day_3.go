@@ -24,7 +24,7 @@ func findMulSubstrings(s string) []string {
 
 	pattern := `mul\(\d{1,3},\d{1,3}\)`
 	re := regexp.MustCompile(pattern)
-	return re.FindAllString(s, -1) // TODO: need to handle nil case on the outside
+	return re.FindAllString(s, -1)
 }
 
 func dayThree() {
@@ -35,6 +35,9 @@ func dayThree() {
 	}
 	inputString := strings.Join(lines, "\n")
 	mulStrings := findMulSubstrings(inputString)
+	if len(mulStrings) == 0 {
+		fmt.Println("WARN: no valid mul(XXX,YYY) substrings found")
+	}
 	var result []int
 	for _, v := range mulStrings {
 		a, b := extractPeskyDigits(v)
@@ -42,4 +45,8 @@ func dayThree() {
 	}
 
 	fmt.Println("result: ", sumIntArray(result))
+}
+
+func dayThreePartTwo() {
+
 }
