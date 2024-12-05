@@ -27,6 +27,20 @@ func findMulSubstrings(s string) []string {
 	return re.FindAllString(s, -1)
 }
 
+func findMulDoDontSubstrings(input string) []string {
+	// Define the regex pattern to match the substrings
+	pattern := `mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)`
+	//pattern := `mul\([^\)]+\)|do\(\)|don't\(\)`
+
+	// Compile the regex
+	re := regexp.MustCompile(pattern)
+
+	// Find all matches in the input string
+	matches := re.FindAllString(input, -1)
+
+	return matches
+}
+
 func dayThree() {
 
 	lines, err := fileLineScanner("input-data/day3_input.txt")
@@ -45,8 +59,20 @@ func dayThree() {
 	}
 
 	fmt.Println("result: ", sumIntArray(result))
-}
 
-func dayThreePartTwo() {
+	var result2 []int
+	t := findMulDoDontSubstrings(inputString)
+	canMultiply := true
+	for _, v := range t {
+		if v == "do()" {
+			canMultiply = true
+		} else if v == "don't()" {
+			canMultiply = false
+		} else if canMultiply {
+			a, b := extractPeskyDigits(v)
+			result2 = append(result2, a*b)
+		}
+	}
 
+	fmt.Println("result with control substrings: ", sumIntArray(result2))
 }
