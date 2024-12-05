@@ -10,4 +10,6 @@ func main() {
 	dayTwo()
 	fmt.Println("day 3...")
 	dayThree()
+	fmt.Println("day4 ...")
+	dayFour()
 }

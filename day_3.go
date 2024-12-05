@@ -28,16 +28,10 @@ func findMulSubstrings(s string) []string {
 }
 
 func findMulDoDontSubstrings(input string) []string {
-	// Define the regex pattern to match the substrings
+
 	pattern := `mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)`
-	//pattern := `mul\([^\)]+\)|do\(\)|don't\(\)`
-
-	// Compile the regex
 	re := regexp.MustCompile(pattern)
-
-	// Find all matches in the input string
 	matches := re.FindAllString(input, -1)
-
 	return matches
 }
 
