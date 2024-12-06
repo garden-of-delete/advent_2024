@@ -37,10 +37,8 @@ func findMulDoDontSubstrings(input string) []string {
 
 func dayThree() {
 
-	lines, err := fileLineScanner("input-data/day3_input.txt")
-	if err != nil {
-		log.Fatal("Unable to read input file")
-	}
+	lines := fileLineScanner("input-data/day3_input.txt")
+
 	inputString := strings.Join(lines, "\n")
 	mulStrings := findMulSubstrings(inputString)
 	if len(mulStrings) == 0 {

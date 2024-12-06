@@ -24,13 +24,12 @@ func countOccurrences(arr []int) map[int]int {
 	return countMap
 }
 
-func fileLineScanner(filename string) ([]string, error) {
+func fileLineScanner(filename string) []string {
 
 	var values []string
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
-		return values, err
 	}
 	defer func(file *os.File) {
 		err := file.Close()
@@ -48,7 +47,7 @@ func fileLineScanner(filename string) ([]string, error) {
 		values = append(values, line)
 	}
 
-	return values, nil
+	return values
 }
 
 func sumIntArray(arr []int) int {

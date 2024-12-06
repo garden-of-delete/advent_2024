@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strconv"
 	"strings"
@@ -10,10 +9,7 @@ import (
 
 func dayOne() {
 
-	lines, err := fileLineScanner("input-data/day1_input.txt")
-	if err != nil {
-		log.Fatal("Unable to open input file")
-	}
+	lines := fileLineScanner("input-data/day1_input.txt")
 
 	var vals1, vals2 []int
 	for _, line := range lines {

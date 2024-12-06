@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -75,10 +74,7 @@ func exciseScan(slice []int) Report { // it's pasta time
 
 func dayTwo() {
 
-	lines, err := fileLineScanner("input-data/day2_input.txt")
-	if err != nil {
-		log.Fatal("Unable to read input file")
-	}
+	lines := fileLineScanner("input-data/day2_input.txt")
 
 	var vals [][]int
 	for _, line := range lines {
