@@ -7,31 +7,38 @@ type Set[T comparable] struct {
 }
 
 func NewSet[T comparable]() *Set[T] {
+
 	return &Set[T]{elements: make(map[T]struct{})}
 }
 
 func (s *Set[T]) Add(value T) {
+
 	s.elements[value] = struct{}{}
 }
 
 func (s *Set[T]) Remove(value T) {
+
 	delete(s.elements, value)
 }
 
 func (s *Set[T]) Contains(value T) bool {
 	_, exists := s.elements[value]
+
 	return exists
 }
 
 func (s *Set[T]) Size() int {
+
 	return len(s.elements)
 }
 
 func (s *Set[T]) IsEmpty() bool {
+
 	return len(s.elements) == 0
 }
 
 func (s *Set[T]) Values() []T {
+
 	values := make([]T, 0, len(s.elements))
 	for key := range s.elements {
 		values = append(values, key)
@@ -40,10 +47,12 @@ func (s *Set[T]) Values() []T {
 }
 
 func (s *Set[T]) Clear() {
+
 	s.elements = make(map[T]struct{})
 }
 
 func (s *Set[T]) Intersects(t *Set[T]) bool {
+
 	for _, v := range s.Values() {
 		if t.Contains(v) {
 			return true
@@ -53,6 +62,7 @@ func (s *Set[T]) Intersects(t *Set[T]) bool {
 }
 
 func (s *Set[T]) ToSlice() []T {
+
 	result := make([]T, 0, len(s.elements))
 	for key := range s.elements {
 		result = append(result, key)

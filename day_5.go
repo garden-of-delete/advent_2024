@@ -6,21 +6,15 @@ import (
 	"strings"
 )
 
-func swapRight[T any](arr []T, i int) {
-	if i == len(arr)-2 { // if not the last index
-		return
-	}
-	arr[i], arr[i+1] = arr[i+1], arr[i]
-}
-
 func swapLeft[T any](arr []T, i int) {
+
 	if i == 0 { // if not the first index
 		return
 	}
 	arr[i], arr[i-1] = arr[i-1], arr[i]
 }
 
-func getInvalidIndex(arr []int, orderMap map[int]*Set[int]) int { // TODO: test
+func getInvalidIndex(arr []int, orderMap map[int]*Set[int]) int {
 
 	seen := NewSet[int]()
 	for i, v := range arr { // for each value in the sequence
@@ -31,7 +25,7 @@ func getInvalidIndex(arr []int, orderMap map[int]*Set[int]) int { // TODO: test
 			if seen.Intersects(orderMap[v]) {
 				return i
 			}
-			seen.Add(v) // TODO: HERE: is this the right spot?
+			seen.Add(v)
 		} else {
 			seen.Add(v)
 		}
@@ -93,7 +87,7 @@ func dayFive() {
 
 	// orderMap -> key MUST appear before all values in the value Set
 	nInvalidOrderings := 0
-	var fixedOrderings [][]int // TODO: reduce to middle values, no need for the array
+	var fixedOrderings [][]int
 	var validOrderingMiddleValues []int
 	for _, arr := range pageSequence { // for each sequence of pages
 		isValidOrdering := true
@@ -104,7 +98,7 @@ func dayFive() {
 				continue
 			} else if _, exists := orderMap[v]; exists { // if any other values must appear before this one
 				if seen.Intersects(orderMap[v]) {
-					fmt.Println("INFO: Invalid ordering: ", arr)
+					//fmt.Println("INFO: Invalid ordering: ", arr)
 					isValidOrdering = false
 					nInvalidOrderings++
 					fixedOrderings = append(fixedOrderings, orderPages(arr, orderMap))
@@ -118,9 +112,9 @@ func dayFive() {
 		}
 	}
 
-	fmt.Println("invalid orderings: ", nInvalidOrderings)
+	//fmt.Println("invalid orderings: ", nInvalidOrderings)
 	fmt.Println("valid ordering middle value sum: ", sumIntArray(validOrderingMiddleValues))
-	fmt.Println("fixed orderings: ", fixedOrderings)
+	//fmt.Println("fixed orderings: ", fixedOrderings)
 
 	var fixedOrderingMiddleValues []int
 	for _, arr := range fixedOrderings {
