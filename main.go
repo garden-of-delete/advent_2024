@@ -13,5 +13,6 @@ func main() {
 	fmt.Println("day4 ...")
 	dayFour()
 	fmt.Println("day5 ...")
+	//runSetTests()
 	dayFive()
 }
