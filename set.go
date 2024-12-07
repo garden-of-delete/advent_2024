@@ -52,6 +52,14 @@ func (s *Set[T]) Intersects(t *Set[T]) bool {
 	return false
 }
 
+func (s *Set[T]) ToSlice() []T {
+	result := make([]T, 0, len(s.elements))
+	for key := range s.elements {
+		result = append(result, key)
+	}
+	return result
+}
+
 func runSetTests() {
 
 	set := NewSet[int]()

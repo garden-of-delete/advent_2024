@@ -6,9 +6,50 @@ import (
 	"strings"
 )
 
-//func orderPages(arr []int, orderMap [][]int) []int {
-//
-//}
+func swapRight[T any](arr []T, i int) {
+	if i == len(arr)-2 { // if not the last index
+		return
+	}
+	arr[i], arr[i+1] = arr[i+1], arr[i]
+}
+
+func swapLeft[T any](arr []T, i int) {
+	if i == 0 { // if not the first index
+		return
+	}
+	arr[i], arr[i-1] = arr[i-1], arr[i]
+}
+
+func getInvalidIndex(arr []int, orderMap map[int]*Set[int]) int { // TODO: test
+
+	seen := NewSet[int]()
+	for i, v := range arr { // for each value in the sequence
+		if i == 0 { // if the first value in the sequence
+			seen.Add(v)
+			continue
+		} else if _, exists := orderMap[v]; exists { // if any other values must appear before this one
+			if seen.Intersects(orderMap[v]) {
+				return i
+			}
+			seen.Add(v) // TODO: HERE: is this the right spot?
+		} else {
+			seen.Add(v)
+		}
+	}
+	return -1
+}
+
+func orderPages(arr []int, orderMap map[int]*Set[int]) []int {
+
+	var ordered []int
+	for _, v := range arr { // deep copy input array
+		ordered = append(ordered, v)
+	}
+	for i := getInvalidIndex(ordered, orderMap); i != -1; i = getInvalidIndex(ordered, orderMap) {
+		swapLeft(ordered, i)
+	}
+	return ordered
+}
 
 func dayFive() {
 
@@ -24,7 +65,7 @@ func dayFive() {
 				fmt.Println("WARN: invalid integers in row ", v)
 				continue
 			}
-			orderRules = append(orderRules, []int{num1, num2}) // num1 should always be after any num2
+			orderRules = append(orderRules, []int{num1, num2}) // num1 MUST appear before num2
 		} else {
 			var nums []int
 			vals := strings.Split(v, ",")
@@ -51,7 +92,8 @@ func dayFive() {
 	}
 
 	// orderMap -> key MUST appear before all values in the value Set
-	invalidOrderings := 0
+	nInvalidOrderings := 0
+	var fixedOrderings [][]int // TODO: reduce to middle values, no need for the array
 	var validOrderingMiddleValues []int
 	for _, arr := range pageSequence { // for each sequence of pages
 		isValidOrdering := true
@@ -64,7 +106,8 @@ func dayFive() {
 				if seen.Intersects(orderMap[v]) {
 					fmt.Println("INFO: Invalid ordering: ", arr)
 					isValidOrdering = false
-					invalidOrderings++
+					nInvalidOrderings++
+					fixedOrderings = append(fixedOrderings, orderPages(arr, orderMap))
 					break
 				}
 			}
@@ -75,6 +118,13 @@ func dayFive() {
 		}
 	}
 
-	fmt.Println("invalid orderings: ", invalidOrderings)
+	fmt.Println("invalid orderings: ", nInvalidOrderings)
 	fmt.Println("valid ordering middle value sum: ", sumIntArray(validOrderingMiddleValues))
+	fmt.Println("fixed orderings: ", fixedOrderings)
+
+	var fixedOrderingMiddleValues []int
+	for _, arr := range fixedOrderings {
+		fixedOrderingMiddleValues = append(fixedOrderingMiddleValues, arr[(len(arr)-1)/2])
+	}
+	fmt.Println("fixed ordering middle value sum: ", sumIntArray(fixedOrderingMiddleValues))
 }
