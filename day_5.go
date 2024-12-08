@@ -47,7 +47,6 @@ func orderPages(arr []int, orderMap map[int]*Set[int]) []int {
 
 func dayFive() {
 
-	//lines := fileLineScanner("input-data-test/day5_input_test.txt")
 	lines := fileLineScanner("input-data/day5_input.txt")
 	var orderRules, pageSequence [][]int
 	for _, v := range lines {

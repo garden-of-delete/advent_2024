@@ -10,9 +10,11 @@ func main() {
 	dayTwo()
 	fmt.Println("day 3...")
 	dayThree()
-	fmt.Println("day4 ...")
+	fmt.Println("day4...")
 	dayFour()
-	fmt.Println("day5 ...")
-	//runSetTests()
+	fmt.Println("day5...")
 	dayFive()
+	fmt.Println("day6...")
+	daySix()
+
 }
