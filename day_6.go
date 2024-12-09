@@ -30,7 +30,7 @@ type World struct {
 	obstaclePos *Set[Pos]
 	xSize       int
 	ySize       int
-	visited     map[Pos]Direction
+	visited     map[Pos][]Direction // use a slice instead of Set because pointer syntax in Go is cursed
 }
 
 func (world *World) Step() bool { // no invalid worlds allowed outside this func
@@ -43,15 +43,15 @@ func (world *World) Step() bool { // no invalid worlds allowed outside this func
 	}
 	world.guardPos = peekPos
 	if world.checkWorldExit() {
-		world.visited[currentPos] = currentDir
+		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
 		return false
 	} else if world.collisionCheck() {
 		world.guardPos = currentPos
 		world.turnRight()
-		fmt.Println("INFO: Turning right...")
+		//fmt.Println("INFO: Turning right...")
 		return world.Step()
 	} else {
-		world.visited[currentPos] = currentDir
+		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
 		return true // peekPos becomes currentPos
 	}
 }
@@ -88,6 +88,28 @@ func (world *World) checkWorldExit() bool {
 	return false
 }
 
+func (world *World) checkCycle() bool {
+
+	if contains(world.visited[world.guardPos], world.guardDir) {
+		return true
+	}
+	return false
+}
+
+func (world *World) addObstacle(pos Pos) {
+
+	// TODO: question. do i need to add an obstacle at the initial position after the first step? -> probably
+	if world.guardPos == pos { // don't add an obstacle at the initial position
+		return
+	}
+	world.obstaclePos.Add(pos)
+}
+
+func (world *World) removeObstacle(pos Pos) {
+
+	world.obstaclePos.Remove(pos)
+}
+
 func (world *World) printWorld() {
 
 	for y := 0; y < world.ySize; y++ {
@@ -118,7 +140,7 @@ func NewWorld(lines []string) *World {
 
 	world := World{}
 	world.obstaclePos = NewSet[Pos]()
-	world.visited = map[Pos]Direction{}
+	world.visited = map[Pos][]Direction{}
 	world.ySize = len(lines)
 	world.xSize = len(lines[0])
 	for y := range lines {
@@ -132,7 +154,7 @@ func NewWorld(lines []string) *World {
 				world.guardPos.x = x
 				world.guardPos.y = y
 				world.guardDir = UP
-				world.visited[Pos{x, y}] = UP
+				world.visited[Pos{x, y}] = append(world.visited[Pos{x, y}], UP) // TODO: causes a problem with cycle check
 			} else {
 				fmt.Println("ERROR: invalid input character: ", chars[x])
 			}
@@ -141,26 +163,49 @@ func NewWorld(lines []string) *World {
 	return &world
 }
 
+func runWorldSim(world *World) bool {
+
+	for nSteps := 1; world.Step(); nSteps++ {
+		//fmt.Println("Step: ", nSteps)
+		//world.printWorld()
+		if world.checkCycle() {
+			return true // world contains a cycle
+		}
+	}
+	return false
+}
+
 func daySix() {
 
 	// read initial world
 	//lines := fileLineScanner("input-data-test/day6_input_test.txt")
+	//lines := fileLineScanner("input-data-test/day6_input_cycle_test.txt")
 	lines := fileLineScanner("input-data/day6_input.txt")
 
-	world := NewWorld(lines)
-	//world.printWorld()
-	for i := 0; world.Step(); i++ {
-		fmt.Println("Step: ", i+1)
-		//world.printWorld()
+	initWorld := NewWorld(lines)
+	initGuardPos := initWorld.guardPos
+	initWorld.printWorld()
+
+	// initial run
+	runWorldSim(initWorld)
+	fmt.Printf("INFO: guard visited %d distinct locations\n", len(initWorld.visited))
+
+	// for every position on the path
+	nCycles := 0
+	delete(initWorld.visited, initGuardPos)
+	fmt.Println("derp")
+	for pos := range initWorld.visited { // TODO: should copy visited?
+		// add an obstacle to the world
+		world := NewWorld(lines)
+		fmt.Println("adding obstacle at pos: ", pos)
+		fmt.Printf("initialized a world of size: %d, %d\n", initWorld.xSize, initWorld.ySize)
+		world.addObstacle(pos) // TODO: need to add obstacle at initial position after guard moves one step?
+		//fmt.Println("INFO: add obstacle at position: ", pos)
+		//run a new simulation
+		if runWorldSim(world) {
+			nCycles++
+		}
+		fmt.Println("done!")
 	}
-	fmt.Printf("INFO: guard visited %d distinct locations\n", len(world.visited))
-
-	// while checkWorldExit == false and not in a cycle
-	// check next position for cycle (part 2)
-	// check next position for collision
-	// if collision world.turnRight()
-	// check next position for exit
-	// if exit
-	// world.Step
-
+	fmt.Printf("INFO: %d possible cycles\n", nCycles)
 }
