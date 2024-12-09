@@ -4,17 +4,18 @@ import "fmt"
 
 func main() {
 
-	fmt.Println("day 1...")
+	fmt.Println("=== Day 1 ===")
 	dayOne()
-	fmt.Println("day 2...")
+	fmt.Println("=== Day 2 ===")
 	dayTwo()
-	fmt.Println("day 3...")
+	fmt.Println("=== Day 3 ===")
 	dayThree()
-	fmt.Println("day4...")
+	fmt.Println("=== Day 4 ===")
 	dayFour()
-	fmt.Println("day5...")
+	fmt.Println("=== Day 5 ===")
 	dayFive()
-	fmt.Println("day6...")
-	daySix()
-
+	fmt.Println("=== Day 6 ===")
+	//daySix()
+	fmt.Println("=== Day 7 ===")
+	daySeven()
 }
