@@ -66,3 +66,14 @@ func contains[T comparable](slice []T, value T) bool {
 	}
 	return false
 }
+
+func hasDuplicates[T comparable](nums []T) bool {
+	seen := make(map[T]bool)
+	for _, v := range nums {
+		if seen[v] {
+			return true
+		}
+		seen[v] = true
+	}
+	return false
+}

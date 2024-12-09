@@ -30,30 +30,7 @@ type World struct {
 	obstaclePos *Set[Pos]
 	xSize       int
 	ySize       int
-	visited     map[Pos][]Direction // use a slice instead of Set because pointer syntax in Go is cursed
-}
-
-func (world *World) Step() bool { // no invalid worlds allowed outside this func
-
-	currentPos := world.guardPos
-	currentDir := world.guardDir
-	peekPos := Pos{
-		world.guardPos.x + world.guardDir.xDir,
-		world.guardPos.y + world.guardDir.yDir,
-	}
-	world.guardPos = peekPos
-	if world.checkWorldExit() {
-		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
-		return false
-	} else if world.collisionCheck() {
-		world.guardPos = currentPos
-		world.turnRight()
-		//fmt.Println("INFO: Turning right...")
-		return world.Step()
-	} else {
-		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
-		return true // peekPos becomes currentPos
-	}
+	visited     map[Pos][]Direction // stores the orientation of the guard when exiting a Pos
 }
 
 func (world *World) turnRight() {
@@ -88,17 +65,8 @@ func (world *World) checkWorldExit() bool {
 	return false
 }
 
-func (world *World) checkCycle() bool {
-
-	if contains(world.visited[world.guardPos], world.guardDir) {
-		return true
-	}
-	return false
-}
-
 func (world *World) addObstacle(pos Pos) {
 
-	// TODO: question. do i need to add an obstacle at the initial position after the first step? -> probably
 	if world.guardPos == pos { // don't add an obstacle at the initial position
 		return
 	}
@@ -154,7 +122,6 @@ func NewWorld(lines []string) *World {
 				world.guardPos.x = x
 				world.guardPos.y = y
 				world.guardDir = UP
-				world.visited[Pos{x, y}] = append(world.visited[Pos{x, y}], UP) // TODO: causes a problem with cycle check
 			} else {
 				fmt.Println("ERROR: invalid input character: ", chars[x])
 			}
@@ -163,11 +130,39 @@ func NewWorld(lines []string) *World {
 	return &world
 }
 
+func (world *World) checkCycle() bool {
+
+	if hasDuplicates(world.visited[world.guardPos]) {
+		return true
+	}
+	return false
+}
+
+func (world *World) Step() bool { // no invalid worlds allowed outside this func
+
+	currentPos := world.guardPos
+	currentDir := world.guardDir
+	peekPos := Pos{
+		world.guardPos.x + world.guardDir.xDir,
+		world.guardPos.y + world.guardDir.yDir,
+	}
+	world.guardPos = peekPos
+	if world.checkWorldExit() {
+		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
+		return false
+	} else if world.collisionCheck() {
+		world.guardPos = currentPos
+		world.turnRight()
+		return world.Step()
+	} else {
+		world.visited[currentPos] = append(world.visited[currentPos], currentDir)
+		return true // peekPos becomes currentPos
+	}
+}
+
 func runWorldSim(world *World) bool {
 
 	for nSteps := 1; world.Step(); nSteps++ {
-		//fmt.Println("Step: ", nSteps)
-		//world.printWorld()
 		if world.checkCycle() {
 			return true // world contains a cycle
 		}
@@ -177,35 +172,23 @@ func runWorldSim(world *World) bool {
 
 func daySix() {
 
-	// read initial world
-	//lines := fileLineScanner("input-data-test/day6_input_test.txt")
-	//lines := fileLineScanner("input-data-test/day6_input_cycle_test.txt")
 	lines := fileLineScanner("input-data/day6_input.txt")
 
 	initWorld := NewWorld(lines)
-	initGuardPos := initWorld.guardPos
 	initWorld.printWorld()
 
 	// initial run
 	runWorldSim(initWorld)
 	fmt.Printf("INFO: guard visited %d distinct locations\n", len(initWorld.visited))
 
-	// for every position on the path
+	// for every position on the initial path
 	nCycles := 0
-	delete(initWorld.visited, initGuardPos)
-	fmt.Println("derp")
-	for pos := range initWorld.visited { // TODO: should copy visited?
-		// add an obstacle to the world
+	for pos := range initWorld.visited {
 		world := NewWorld(lines)
-		fmt.Println("adding obstacle at pos: ", pos)
-		fmt.Printf("initialized a world of size: %d, %d\n", initWorld.xSize, initWorld.ySize)
-		world.addObstacle(pos) // TODO: need to add obstacle at initial position after guard moves one step?
-		//fmt.Println("INFO: add obstacle at position: ", pos)
-		//run a new simulation
+		world.addObstacle(pos)
 		if runWorldSim(world) {
 			nCycles++
 		}
-		fmt.Println("done!")
 	}
 	fmt.Printf("INFO: %d possible cycles\n", nCycles)
 }
