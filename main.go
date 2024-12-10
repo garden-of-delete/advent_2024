@@ -17,5 +17,7 @@ func main() {
 	fmt.Println("=== Day 6 ===")
 	//daySix()
 	fmt.Println("=== Day 7 ===")
-	daySeven()
+	//daySeven()
+	fmt.Println("=== Day 8 ===")
+	dayEight()
 }
