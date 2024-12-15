@@ -33,6 +33,11 @@ func (a Pos) Sub(b Pos) Pos {
 	return Pos{a.x - b.x, a.y - b.y}
 }
 
+func (a Pos) Scale(n int) Pos {
+
+	return Pos{a.x * n, a.y * n}
+}
+
 func readCityMap(lines []string) CityMap {
 
 	xSize := len(lines[0])
@@ -81,15 +86,27 @@ func printCityMap(cityMap CityMap) {
 	}
 }
 
-func findAntiNodes(pair PosPair) (Pos, Pos) {
-	// pair.a=(1,3) pair.b=(5,9) -> (4,6)
-	// antinode 1 = (1,3)+(-4,-6)=(-3,-3)
-	// antinode 2 = (5,9)-(-4,-6)=(9,15)
-	// (5,9) (1,3) -> (4,6)
-	vector := pair.b.Sub(pair.a)
-	antiNode1 := pair.a.Sub(vector)
-	antiNode2 := pair.b.Add(vector)
-	return antiNode1, antiNode2
+func findAntiNodes(cityMap *CityMap, pair PosPair) []Pos {
+
+	var result []Pos
+	vector := pair.b.Sub(pair.a) // a -> b
+	for i := 0; ; i++ {
+		p := pair.a.Add(vector.Scale(i))
+		if isOnMap(cityMap, p) {
+			result = append(result, p)
+		} else {
+			break
+		}
+	}
+	for i := -1; ; i-- {
+		p := pair.a.Add(vector.Scale(i))
+		if isOnMap(cityMap, p) {
+			result = append(result, p)
+		} else {
+			break
+		}
+	}
+	return result
 }
 
 func isOnMap(cityMap *CityMap, pos Pos) bool {
@@ -113,12 +130,9 @@ func scanFrequencies(cityMap CityMap) map[Pos]string {
 		}
 		// find anti-nodes and store the ones that are on map
 		for _, pair := range pairs { // for each pair at this frequency
-			a, b := findAntiNodes(pair)
-			if isOnMap(&cityMap, a) {
+			t := findAntiNodes(&cityMap, pair) // on-map anti-nodes only
+			for _, a := range t {
 				result[a] = frequency
-			}
-			if isOnMap(&cityMap, b) {
-				result[b] = frequency
 			}
 		}
 	}
@@ -128,32 +142,25 @@ func scanFrequencies(cityMap CityMap) map[Pos]string {
 func dayEight() {
 
 	lines := fileLineScanner("input-data/day8_input.txt")
-	//lines := fileLineScanner("input-data-test/day8_input_test.txt")
 
 	cityMap := readCityMap(lines)
-	fmt.Println("city map: ")
-	printCityMap(cityMap)
+	//fmt.Println("city map: ")
+	//printCityMap(cityMap)
 
-	fmt.Println("=== === === ===")
-	//a := Pos{1, 3}
-	//b := Pos{5, 9}
-	//test1 := PosPair{a, b}
-	//test2 := PosPair{b, a}
-	//fmt.Println(findAntiNodes(test1))
-	//fmt.Println(findAntiNodes(test2))
+	//fmt.Println("=== === === ===")
 
 	antiNodes := scanFrequencies(cityMap)
 	nAntiNodes := 0
 	for y := 0; y < cityMap.ySize; y++ {
 		for x := 0; x < cityMap.xSize; x++ {
 			if _, exists := antiNodes[Pos{x, y}]; exists {
-				print("#")
+				//print("#")
 				nAntiNodes++
 			} else {
-				print(".")
+				//print(".")
 			}
 		}
-		print("\n")
+		//print("\n")
 	}
 	fmt.Println("found antinodes: ", nAntiNodes)
 
