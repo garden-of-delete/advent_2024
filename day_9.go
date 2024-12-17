@@ -135,10 +135,10 @@ func dayNine() {
 	lines := fileLineScanner("input-data/day9_input.txt")
 
 	drive := readDriveMap(lines[0])
-	printDriveMap(drive.d)
+	//printDriveMap(drive.d)
 	//compressDrive(drive.d)
 
 	defragCompressDrive(drive)
-	printDriveMap(drive.d)
+	//printDriveMap(drive.d)
 	fmt.Println("drive checksum: ", driveChecksum(drive.d))
 }

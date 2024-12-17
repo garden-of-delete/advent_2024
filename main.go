@@ -22,4 +22,6 @@ func main() {
 	dayEight()
 	fmt.Println("=== Day 9 ===")
 	dayNine()
+	fmt.Println("=== Day 10 ===")
+	dayTen()
 }
