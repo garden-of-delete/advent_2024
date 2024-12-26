@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-type Stone struct { // TODO: remove
-	value int
-}
-
 func readVals(lines []string) []int {
 
 	var result []int
@@ -33,7 +29,7 @@ func evolve(stones []int) []int {
 	for i := range stones {
 		if stones[i] == 0 {
 			result = append(result, 1)
-		} else if runes := []rune((strconv.Itoa(stones[i]))); len(runes)%2 == 0 { // TODO: test
+		} else if runes := []rune((strconv.Itoa(stones[i]))); len(runes)%2 == 0 {
 			// do array operation
 			left, err1 := strconv.Atoi(string(runes[:len(runes)/2]))
 			right, err2 := strconv.Atoi(string(runes[len(runes)/2:]))
